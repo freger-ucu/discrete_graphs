@@ -9,7 +9,35 @@ def read_incidence_matrix(filename: str) -> list[list]:
     :param str filename: path to file
     :returns list[list]: the incidence matrix of a given graph
     """
-    pass
+    with open(filename, "r", encoding="utf-8") as f:
+        graph_data = f.read().splitlines()[1:-1]
+    graph_ = [g.strip(";").split("->") for g in graph_data]
+    graph = [[int(edge[0].strip()), int(edge[1].strip())] for edge in graph_]
+
+    nodes_list = []
+    for edge in graph:
+        for node in edge:
+            if node not in nodes_list:
+                nodes_list.append(node)
+
+    incidence_matrix = []
+    row_num = len(nodes_list)
+    column_num = len(graph)
+
+    for i in range(row_num):
+        incidence_matrix.append([0 for i in range(column_num)])
+    print(graph)
+
+    for i in nodes_list:
+        for j, node in enumerate(graph):
+            if i == node[0]:
+                incidence_matrix[i][j] = 1
+            elif i == node[1]:
+                incidence_matrix[i][j] = -1
+            elif i == node[0] == node[1]:
+                incidence_matrix[i][j] = 2
+
+    return incidence_matrix
 
 
 def read_adjacency_matrix(filename: str) -> list[list]:
@@ -17,7 +45,29 @@ def read_adjacency_matrix(filename: str) -> list[list]:
     :param str filename: path to file
     :returns list[list]: the adjacency matrix of a given graph
     """
-    pass
+    with open(filename, "r", encoding="utf-8") as f:
+        graph_data = f.read().splitlines()[1:-1]
+    graph_ = [g.strip(";").split("->") for g in graph_data]
+    graph = [[int(edge[0].strip()), int(edge[1].strip())] for edge in graph_]
+
+    nodes_list = []
+    for edge in graph:
+        for node in edge:
+            if node not in nodes_list:
+                nodes_list.append(node)
+
+    adjacency_matrix = []
+    row_num = len(nodes_list)
+
+    for i in range(row_num):
+        adjacency_matrix.append([0 for i in range(row_num)])
+
+    for i in nodes_list:
+        for j in nodes_list:
+            if [i, j] in graph:
+                adjacency_matrix[i][j] += 1*graph.count([i, j])
+
+    return adjacency_matrix
 
 
 def read_adjacency_dict(filename: str) -> dict[int, list[int]]:
@@ -25,7 +75,26 @@ def read_adjacency_dict(filename: str) -> dict[int, list[int]]:
     :param str filename: path to file
     :returns dict: the adjacency dict of a given graph
     """
-    pass
+    with open(filename, "r", encoding="utf-8") as f:
+        graph_data = f.read().splitlines()[1:-1]
+    graph_ = [g.strip(";").split("->") for g in graph_data]
+    graph = [[int(edge[0].strip()), int(edge[1].strip())] for edge in graph_]
+
+    adjacency_dict = {}
+    nodes_list = []
+    for edge in graph:
+        for node in edge:
+            if node not in nodes_list:
+                nodes_list.append(node)
+
+    for node in nodes_list:
+        adjacency_dict[node] = []
+        for edge in graph:
+            if node == edge[0]:
+                if edge[1] not in adjacency_dict[node]:
+                    adjacency_dict[node].append(edge[1])
+
+    return adjacency_dict
 
 
 def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
@@ -111,7 +180,23 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
     >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
     """
-    pass
+    visited = set()
+    queue = [start]
+    traversal = []
+
+    while queue:
+        curr_node = queue.pop(0)
+        if curr_node not in visited:
+            traversal.append(curr_node)
+            visited.add(curr_node)
+
+            neighbor_list = []
+            for neighbor in graph.get(curr_node, []):
+                if neighbor not in visited:
+                    neighbor_list.append(neighbor)
+            queue.extend(neighbor_list)
+    return traversal
+
 
 
 def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[int]:
