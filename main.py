@@ -5,6 +5,7 @@ Algorithms for working with graphs
 
 def read_incidence_matrix(filename: str) -> list[list]:
     """
+    Reads the file containing a graph as an incidence matrix.
     :param str filename: path to file
     :returns list[list]: the incidence matrix of a given graph
     """
@@ -25,8 +26,6 @@ def read_incidence_matrix(filename: str) -> list[list]:
 
     for i in range(row_num):
         incidence_matrix.append([0 for i in range(column_num)])
-    print(graph)
-
     for i in nodes_list:
         for j, node in enumerate(graph):
             if i == node[0]:
@@ -41,6 +40,7 @@ def read_incidence_matrix(filename: str) -> list[list]:
 
 def read_adjacency_matrix(filename: str) -> list[list]:
     """
+    Reads the file containing a graph as an adjacency matrix.
     :param str filename: path to file
     :returns list[list]: the adjacency matrix of a given graph
     """
@@ -71,6 +71,7 @@ def read_adjacency_matrix(filename: str) -> list[list]:
 
 def read_adjacency_dict(filename: str) -> dict[int, list[int]]:
     """
+    Reads the file containing a graph as a dict.
     :param str filename: path to file
     :returns dict: the adjacency dict of a given graph
     """
@@ -98,7 +99,8 @@ def read_adjacency_dict(filename: str) -> dict[int, list[int]]:
 
 def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
     """
-    :param list[list] graph: the adjacency list of a given graph
+    Iterative dfs traversal of a graph set as a dict.
+    :param dict graph: the adjacency dict of a given graph
     :param int start: start vertex of search
     :returns list[int]: the dfs traversal of the graph
     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
@@ -122,7 +124,8 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
 
 def iterative_adjacency_matrix_dfs(graph: list[list], start: int) -> list[int]:
     """
-    :param dict graph: the adjacency matrix of a given graph
+    Iterative dfs traversal of the graph set as an adjacency matrix.
+    :param list[list] graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
     :returns list[int]: the dfs traversal of the graph
     >>> iterative_adjacency_matrix_dfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
@@ -150,8 +153,8 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) -> list[int]:
 
 def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int, visited=None) -> list[int]:
     """
-    Recursive dfs traversal of the graph set as a dict
-    :param list[list] graph: the adjacency list of a given graph
+    Recursive dfs traversal of the graph set as a dict.
+    :param dict graph: the adjacency list of a given graph
     :param int start: start vertex of search
     :param visited: visited vertexes for dfs traversal
     :returns list[int]: the dfs traversal of the graph
@@ -174,8 +177,8 @@ def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int, visite
 
 def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int, visited=None) -> list[int]:
     """
-    Recursive dfs traversal of the graph set as a matrix
-    :param dict graph: the adjacency matrix of a given graph
+    Recursive dfs traversal of the graph set as an adjacency matrix.
+    :param list[list] graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
     :param visited: visited vertexes for dfs traversal
     :returns list[int]: the dfs traversal of the graph
@@ -197,7 +200,8 @@ def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int, visited=N
 
 def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> list[int]:
     """
-    :param list[list] graph: the adjacency list of a given graph
+    Iterative bfs traversal of the graph set as a dict
+    :param dict graph: the adjacency list of a given graph
     :param int start: start vertex of search
     :returns list[int]: the bfs traversal of the graph
     >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 0)
@@ -223,10 +227,10 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
     return traversal
 
 
-
 def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[int]:
     """
-    :param dict graph: the adjacency matrix of a given graph
+    Iterative bfs traversal of the graph set as an adjacency matrix.
+    :param list[list] graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
     :returns list[int]: the bfs traversal of the graph
     >>> iterative_adjacency_matrix_bfs([[0, 1, 1], [1, 0, 1], [1, 1, 0]], 0)
