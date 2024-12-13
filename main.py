@@ -1,6 +1,6 @@
-# """
-# Algorithms for working with graphs
-# """
+"""
+Algorithms for working with graphs
+"""
 from math import inf
 
 
@@ -56,6 +56,7 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) -> list[int]:
 
 def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int, visited=None) -> list[int]:
     """
+    Recursive dfs traversal of the graph set as a dict
     :param list[list] graph: the adjacency list of a given graph
     :param int start: start vertex of search
     :param visited: visited vertexes for dfs traversal
@@ -79,6 +80,7 @@ def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int, visite
 
 def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int, visited=None) -> list[int]:
     """
+    Recursive dfs traversal of the graph set as a matrix
     :param dict graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
     :param visited: visited vertexes for dfs traversal
@@ -125,10 +127,31 @@ def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[i
     pass
 
 
+def get_eccentricity(distance: list[list[float]]) -> list[int]:
+    """
+    Implements Floyd-Warshall's algorithm to find the eccentricity of
+    all vertices in a matrix and returns them as an array.
+    :param list[list[float]] distance: distances matrix, where inf marks an unknown route
+    :return: list[int]: the eccentricity list
+    """
+    size = len(distance)
+    for i in range(size):
+        for j in range(size):
+            for k in range(size):
+                if j == k or i == k:
+                    continue
+                distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j])
+                if i == j:
+                    distance[i][j] = -1
+    distance = [[-1 if (distance[i][j] == inf and i == j) else distance[i][j] for j in range(size)]
+                for i in range(size)]
+    return [max(distance[i]) for i in range(size)]
+
+
 def adjacency_matrix_radius(graph: list[list]) -> int:
     """
-    Implenets Floyd-Warshall's algorithm to calculate the eccentricity of all vertices
-    and returns smallest one, which is radius by definition.
+    Uses get_eccentricity() to calculate the eccentricity of all vertices
+    and returns the smallest one, which is radius by definition.
     :param list[list] graph: the adjacency matrix of a given graph
     :returns int: the radius of the graph
     >>> adjacency_matrix_radius([[0, 1, 1], [1, 0, 1], [1, 1, 0]])
@@ -137,24 +160,16 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
                                 [0,0,1,0,0,0,0],[0,0,1,0,0,1,0],[0,0,0,0,1,0,1],[0,0,0,0,0,1,0]])
     2
     """
-    size = len(graph)
-    distance = [[graph[i][j] if graph[i][j] != 0 else inf for j in range(size)]
-                for i in range(size)]
-    for i in range(size):
-        for j in range(size):
-            for k in range(size):
-                if i == j or j == k or i == k:
-                    continue
-                distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j])
-
-    distance = [[distance[i][j] if distance[i][j] != inf else -1 for j in range(size)]
-                for i in range(size)]
-    eccentricity = [max(distance[i]) for i in range(size)]
+    distance = [[graph[i][j] if graph[i][j] != 0 else inf for j in range(len(graph))]
+                for i in range(len(graph))]
+    eccentricity = get_eccentricity(distance)
     return min(eccentricity)
 
 
 def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
     """
+    Uses get_eccentricity() to calculate the eccentricity of all vertices
+    and returns the smallest one, which is radius by definition.
     :param dict graph: the adjacency list of a given graph
     :returns int: the radius of the graph
     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1]})
@@ -162,7 +177,12 @@ def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]})
     2
     """
-    pass
+    distances = [[inf for _ in range(len(graph))] for _ in range(len(graph))]
+    for vertex in graph:
+        for edge in graph[vertex]:
+            distances[vertex][edge] = 1
+    eccentricity = get_eccentricity(distances)
+    return min(eccentricity)
 
 
 if __name__ == "__main__":
