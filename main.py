@@ -1,7 +1,6 @@
 """
 Algorithms for working with graphs
 """
-from math import inf
 
 
 def read_incidence_matrix(filename: str) -> list[list]:
@@ -135,15 +134,16 @@ def get_eccentricity(distance: list[list[float]]) -> list[int]:
     :return: list[int]: the eccentricity list
     """
     size = len(distance)
-    for i in range(size):
-        for j in range(size):
-            for k in range(size):
-                if j == k or i == k:
-                    continue
-                distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j])
-                if i == j:
-                    distance[i][j] = -1
-    distance = [[-1 if (distance[i][j] == inf and i == j) else distance[i][j] for j in range(size)]
+    changes = 1
+    while changes != 0:
+        changes = 0
+        for i in range(size):
+            for j in range(size):
+                for k in range(size):
+                    if distance[i][k] + distance[k][j] < distance[i][j]:
+                        changes += 1
+                        distance[i][j] = distance[i][k] + distance[k][j]
+    distance = [[-1 if (distance[i][j] == float('inf') and i == j) else distance[i][j] for j in range(size)]
                 for i in range(size)]
     return [max(distance[i]) for i in range(size)]
 
@@ -160,7 +160,7 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
                                 [0,0,1,0,0,0,0],[0,0,1,0,0,1,0],[0,0,0,0,1,0,1],[0,0,0,0,0,1,0]])
     2
     """
-    distance = [[graph[i][j] if graph[i][j] != 0 else inf for j in range(len(graph))]
+    distance = [[0 if i == j else graph[i][j] if graph[i][j] != 0 else float('inf') for j in range(len(graph))]
                 for i in range(len(graph))]
     eccentricity = get_eccentricity(distance)
     return min(eccentricity)
@@ -177,10 +177,11 @@ def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
     >>> adjacency_dict_radius({0: [1, 2], 1: [0, 2], 2: [0, 1], 3: [1]})
     2
     """
-    distances = [[inf for _ in range(len(graph))] for _ in range(len(graph))]
+    distances = [[float('inf') if i != j else 0 for i in range(len(graph))] for j in range(len(graph))]
     for vertex in graph:
         for edge in graph[vertex]:
-            distances[vertex][edge] = 1
+            if edge != vertex:
+                distances[vertex][edge] = 1
     eccentricity = get_eccentricity(distances)
     return min(eccentricity)
 
