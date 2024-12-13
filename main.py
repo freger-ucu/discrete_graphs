@@ -107,6 +107,8 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     [0, 1, 2]
     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
+    >>> iterative_adjacency_dict_dfs({0: [2, 1], 1: [3, 2, 0], 2: [1, 0], 3: []}, 0)
+    [0, 1, 2, 3]
     """
     visited = set()
     stack = [start]
@@ -117,8 +119,7 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
         if curr_node not in visited:
             traversal.append(curr_node)
             visited.add(curr_node)
-
-            stack.extend(reversed(graph.get(curr_node, [])))
+            stack.extend(reversed(sorted(graph.get(curr_node, []))))
     return traversal
 
 
@@ -208,6 +209,8 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
     [0, 1, 2]
     >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
+    >>> iterative_adjacency_dict_bfs({0: [2, 1], 1: [3, 2, 0], 2: [1, 0], 3: []}, 0)
+    [0, 1, 2, 3]
     """
     visited = set()
     queue = [start]
@@ -220,7 +223,7 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
             visited.add(curr_node)
 
             neighbor_list = []
-            for neighbor in graph.get(curr_node, []):
+            for neighbor in sorted(graph.get(curr_node, [])):
                 if neighbor not in visited:
                     neighbor_list.append(neighbor)
             queue.extend(neighbor_list)
