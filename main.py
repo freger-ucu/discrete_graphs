@@ -106,7 +106,18 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
     """
-    pass
+    visited = set()
+    stack = [start]
+    traversal = []
+
+    while stack:
+        curr_node = stack.pop()
+        if curr_node not in visited:
+            traversal.append(curr_node)
+            visited.add(curr_node)
+
+            stack.extend(reversed(graph.get(curr_node, [])))
+    return traversal
 
 
 def iterative_adjacency_matrix_dfs(graph: list[list], start: int) -> list[int]:
@@ -119,7 +130,22 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) -> list[int]:
     >>> iterative_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
     """
-    pass
+    visited = set()
+    stack = [start]
+    traversal = []
+
+    while stack:
+        curr_node = stack.pop()
+        if curr_node not in visited:
+            traversal.append(curr_node)
+            visited.add(curr_node)
+
+            neighbors = []
+            for node, i in enumerate(graph[curr_node]):
+                if i == 1 and node not in visited:
+                    neighbors.append(node)
+            stack.extend(reversed(neighbors))
+    return traversal
 
 
 def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int, visited=None) -> list[int]:
@@ -208,7 +234,22 @@ def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[i
     >>> iterative_adjacency_matrix_bfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
     """
-    pass
+    visited = set()
+    queue = [start]
+    traversal = []
+
+    while queue:
+        curr_node = queue.pop(0)
+        if curr_node not in visited:
+            traversal.append(curr_node)
+            visited.add(curr_node)
+
+            neighbor_list = []
+            for node, i in enumerate(graph[curr_node]):
+                if i == 1 and node not in visited:
+                    neighbor_list.append(node)
+            queue.extend(neighbor_list)
+    return traversal
 
 
 def get_eccentricity(distance: list[list[float]]) -> list[int]:
